@@ -36,7 +36,7 @@ class ParInt:
             else:
                 network = 'DUCATUSX_MAINNET'
         print('network', network, type(network))
-        self.addr = NETWORKS[network]['host']
+        self.host = NETWORKS[network]['url']
         self.port = NETWORKS[network]['port']
         print('parity interface', self.addr, self.port, flush=True)
 
@@ -50,7 +50,7 @@ class ParInt:
             }
             try:
                 temp = requests.post(
-                        'http://{}:{}/'.format(self.addr, self.port),
+                        self.host,
                         json=arguments,
                         headers={'Content-Type': 'application/json'}
                 )

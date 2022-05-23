@@ -773,27 +773,6 @@ def check_status(request):
         raise PermissionDenied
     details = contract.get_details()
     now = datetime.datetime.now().timestamp()
-    addr = details.crowdsale_address
-    host = NETWORKS[contract.network.name]['host']
-    port = NETWORKS[contract.network.name]['port']
-    if contract.network.name == 'EOS_MAINNET':
-        command = ['cleos', '-u', 'https://%s:%s' % (host, port), 'get', 'table',
-                   addr, addr, 'state']
-    else:
-        command = ['cleos', '-u', 'http://%s:%s' % (host, port), 'get', 'table', addr, addr, 'state']
-    stdout, stderr = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
-    if stdout:
-        result = json.loads(stdout.decode())['rows'][0]
-        if now > result['finish'] and int(result['total_tokens']) < details.soft_cap:
-            contract.state = 'CANCELLED'
-            contract.save()
-        elif details.is_transferable_at_once and now > result['finish'] and int(
-                result['total_tokens']) >= details.soft_cap:
-            contract.state = 'DONE'
-            contract.save()
-        elif details.is_transferable_at_once and int(result['total_tokens']) >= details.hard_cap:
-            contract.state = 'DONE'
-            contract.save()
     return JsonResponse(ContractSerializer().to_representation(contract))
 
 
