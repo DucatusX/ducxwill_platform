@@ -37,7 +37,6 @@ class ParInt:
                 network = 'DUCATUSX_MAINNET'
         print('network', network, type(network))
         self.host = NETWORKS[network]['url']
-        self.port = NETWORKS[network]['port']
         print('parity interface', self.addr, self.port, flush=True)
 
     def __getattr__(self, method):
